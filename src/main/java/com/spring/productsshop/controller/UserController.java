@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.productsshop.dto.UserDTO;
+import com.spring.productsshop.exception.ErrorDetails;
 import com.spring.productsshop.exception.ResourceNotFoundException;
 import com.spring.productsshop.exception.UsernameAlreadyExistsException;
 import com.spring.productsshop.mapper.UserConvertTo;
@@ -46,9 +47,13 @@ public class UserController {
 
 	// ---------------------Método para obtener todos los usuarios---------------------//
 	@Operation(summary = "Get all users", description = "Get a list of all users")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Users found, retrieved users", content = {
-			@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class))) }),
-			@ApiResponse(responseCode = "404", description = "Users not found") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users found, retrieved users", content = {
+                    @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+            }),
+            @ApiResponse(responseCode = "404", description = "Users not found", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
 	@GetMapping("/users")
 	public ResponseEntity<List<UserDTO>> getAllUsers() {
 		// Guarda todos los usuarios en una lista
@@ -63,10 +68,11 @@ public class UserController {
 
 	// ---------------------Método para obtener un usuario por su ID---------------------//
 	@Operation(summary = "Get user by ID", description = "Get a user by its ID")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "User found", content = {
-					@Content(mediaType = "application/json") }),
-			@ApiResponse(responseCode = "404", description = "User not found with id: ...") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "User not found with id: ...", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
 	@GetMapping("/users/{id}")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
 		// Guarda el usuario encontrado en un optional
@@ -78,8 +84,12 @@ public class UserController {
 
 	// ---------------------Método para crear un nuevo usuario---------------------//
 	@Operation(summary = "Create a new user", description = "Create a new user")
-	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "User created"),
-			@ApiResponse(responseCode = "400", description = "Invalid user data provided") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid user data provided", content = @Content(schema = @Schema(implementation = ErrorDetails.class))),
+            @ApiResponse(responseCode = "409", description = "Username already exists", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
 	@PostMapping("/users")
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 		if (userDTO == null || userDTO.getName().length() < 3 || userDTO.getPassword().length() < 8) {
@@ -93,8 +103,11 @@ public class UserController {
 
 	// ---------------------Método para actualizar un usuario existente por su ID---------------------//
 	@Operation(summary = "Update user by ID", description = "Update an existing user by its ID")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "User updated"),
-			@ApiResponse(responseCode = "404", description = "User not found with id: ...") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User updated", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "User not found with id: ...", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
 	@PutMapping("/users/{id}")
 	public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO updatedUserDTO) {
 		Optional<User> userOptional = userService.findById(id);
@@ -109,8 +122,10 @@ public class UserController {
 
 	// ---------------------Método para eliminar un usuario por su ID---------------------//
 	@Operation(summary = "Delete user by ID", description = "Delete a user by its ID")
-	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "User deleted"),
-			@ApiResponse(responseCode = "404", description = "User not found with id: ...") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User deleted"),
+            @ApiResponse(responseCode = "404", description = "User not found with id: ...", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    })
 	@DeleteMapping("/users/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
 		if (userService.existsById(id)) {

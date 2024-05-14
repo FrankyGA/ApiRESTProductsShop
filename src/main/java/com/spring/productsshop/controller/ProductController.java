@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.productsshop.dto.ProductDTO;
+import com.spring.productsshop.exception.ErrorDetails;
 import com.spring.productsshop.exception.ResourceNotFoundException;
 import com.spring.productsshop.exception.ValidationException;
 import com.spring.productsshop.mapper.ProductConvertTo;
@@ -46,7 +47,7 @@ public class ProductController {
                     @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ProductDTO.class)))
             }),
-            @ApiResponse(responseCode = "404", description = "Products not found")
+            @ApiResponse(responseCode = "404", description = "Products not found", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping("/products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
@@ -60,8 +61,8 @@ public class ProductController {
     @Operation(summary = "Get product by ID", description = "Get a product by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product found", content = {
-                    @Content(mediaType = "application/json")}),
-            @ApiResponse(responseCode = "404", description = "Product not found with id: ...")
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Product not found with id: ...", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
@@ -73,8 +74,9 @@ public class ProductController {
 
     @Operation(summary = "Create a new product", description = "Create a new product")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Product created"),
-            @ApiResponse(responseCode = "400", description = "Invalid product data provided")
+            @ApiResponse(responseCode = "201", description = "Product created", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid product data provided", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PostMapping("/products")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
@@ -88,8 +90,9 @@ public class ProductController {
 
     @Operation(summary = "Update product by ID", description = "Update an existing product by its ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Product updated"),
-            @ApiResponse(responseCode = "404", description = "Product not found with id: ...")
+            @ApiResponse(responseCode = "200", description = "Product updated", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Product not found with id: ...", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @PutMapping("/products/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO updatedProductDTO) {
@@ -106,7 +109,7 @@ public class ProductController {
     @Operation(summary = "Delete product by ID", description = "Delete a product by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Product deleted"),
-            @ApiResponse(responseCode = "404", description = "Product not found with id: ...")
+            @ApiResponse(responseCode = "404", description = "Product not found with id: ...", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     })
     @DeleteMapping("/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
