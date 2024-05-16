@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import jakarta.validation.ValidationException;
 
 @RestController
 @Tag(name = "User", description = "User controller with CRUD Operations")
+@CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
 
 	private final UserService userService;
@@ -92,7 +94,7 @@ public class UserController {
     })
 	@PostMapping("/users")
 	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-		if (userDTO == null || userDTO.getName().length() < 3 || userDTO.getPassword().length() < 8) {
+		if (userDTO == null || userDTO.getName().length() < 3 || userDTO.getPassword().length() < 5) {
 			// Lanza una excepción si los datos del usuario son inválidos
 			throw new ValidationException("Invalid user data provided"); 																
 		}

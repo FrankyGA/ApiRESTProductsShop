@@ -119,8 +119,6 @@ public class ProductController {
         } else {
             throw new ResourceNotFoundException("Product not found with id: " + id);
         }
-    }
-    
-    
+    } 
 }
 
