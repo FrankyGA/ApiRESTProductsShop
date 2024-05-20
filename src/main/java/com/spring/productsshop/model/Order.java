@@ -32,8 +32,8 @@ public class Order {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "id_user", nullable = false)
-	private User user;
+	@JoinColumn(name = "id_client", nullable = false)
+	private Client client;
 
 	@ManyToMany
 	@JoinTable(name = "order_product", joinColumns = @JoinColumn(name = "id_order"), inverseJoinColumns = @JoinColumn(name = "id_product"))
