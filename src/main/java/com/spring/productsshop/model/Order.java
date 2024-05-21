@@ -3,15 +3,13 @@ package com.spring.productsshop.model;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,13 +29,8 @@ public class Order {
 	@Schema(example = "1", description = "ID for order")
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "id_client", nullable = false)
-	private Client client;
-
-	@ManyToMany
-	@JoinTable(name = "order_product", joinColumns = @JoinColumn(name = "id_order"), inverseJoinColumns = @JoinColumn(name = "id_product"))
-	private List<Product> products;
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items;
 
 	@Column(nullable = false)
 	@Schema(example = "10.50", description = "Total price order")
