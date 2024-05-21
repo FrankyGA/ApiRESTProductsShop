@@ -15,9 +15,9 @@
 <body>
 
     <!-- Navegador -->
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container justify-content-center">
-            <a class="navbar-brand" href="#"></a>
+    <nav class="navbar navbar-expand-lg navbar-light ">
+        <div class="container justify-content-center text-center">
+            <a class="navbar-brand" href="index.html"></a>
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -26,18 +26,23 @@
                 <!-- Nav con lista desordenada -->
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="users.html">Users</a>
+                        <a class="nav-link" href="users.html">Users gestion</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="products.html">Products</a>
+                        <a class="nav-link" href="clients.html">Clients gestion</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Products gestion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="orders.html">Orders gestion</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
+    <div class="container mt-5 justify-content-center text-center">
         <h1>User API Client</h1>
         <hr>
 
@@ -52,12 +57,14 @@
                             <div class="col-auto">
                                 <input type="text" class="form-control" id="name" placeholder="Name" required>
                             </div>
+                            <hr>
                             <div class="col-auto">
                                 <input type="password" class="form-control" id="password" placeholder="Password"
                                     required>
                             </div>
+                            <hr>
                             <div class="col-auto">
-                                <button type="submit" class="btn btn-primary">Create</button>
+                                <button type="submit" class="btn btn-success">Create</button>
                             </div>
                         </div>
                     </form>
@@ -84,8 +91,39 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Enlaces</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Productos</a></li>
+                        <li><a href="#">Nosotros</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto</h5>
+                    <p>Dirección: 123 Calle Principal, Ciudad</p>
+                    <p>Teléfono: +123456789</p>
+                    <p>Email: info@example.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Síguenos</h5>
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
