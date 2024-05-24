@@ -23,7 +23,7 @@ public class OrderItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Schema(example = "1", description = "ID for order")
+	@Schema(example = "1", description = "ID for order item")
 	@Column(name = "id_order_items")
 	private Long id;
 

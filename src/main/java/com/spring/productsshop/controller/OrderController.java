@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.productsshop.dto.OrderDTO;
 import com.spring.productsshop.dto.OrderItemDTO;
+import com.spring.productsshop.dto.OrderListDTO;
 import com.spring.productsshop.exception.ErrorDetails;
 import com.spring.productsshop.exception.ResourceNotFoundException;
 import com.spring.productsshop.mapper.OrderConvertTo;
@@ -53,10 +54,12 @@ public class OrderController {
 		this.clientRepository=clientRepository;
 	}
 	
+	
+	// ---------------------Método para consultar pedido por cliente---------------------//
 	@Operation(summary = "Get orders by client", description = "Get orders by client")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Orders found, retrieved orders", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = OrderDTO.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = OrderListDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Orders not found", content = @Content(schema = @Schema(implementation = ErrorDetails.class))) })
     @GetMapping("/orders")
     public ResponseEntity<List<OrderDTO>> getOrdersByClient(@RequestParam Long clientId) {
@@ -70,6 +73,7 @@ public class OrderController {
     }
 
 	
+	// ---------------------Método para consultar pedido por id---------------------//
 	@Operation(summary = "Get orders by id", description = "Get orders by id")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Orders found, retrieved orders", content = {
