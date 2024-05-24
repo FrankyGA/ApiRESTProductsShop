@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDTO {
-
-	private Long id;
-	private Long clientId;
-    private List<OrderItemDTO> items;
-    private Double total;
-    
+public class OrderListDTO {
 	
+	private Long id;
+    private Long clientId;
+    private List<OrderListItemDTO> items;
+    private Double total;
+
 }

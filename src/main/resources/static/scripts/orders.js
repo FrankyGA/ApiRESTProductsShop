@@ -1,5 +1,6 @@
 $(document).ready(function () {
     let productsList = [];
+    let clientsList = [];
 
     // Función para cargar productos
     function loadProducts() {
@@ -29,8 +30,29 @@ $(document).ready(function () {
             });
     }
 
-    // Cargar productos al cargar la página
+    // Función para cargar clientes
+    function loadClients() {
+        fetch("http://localhost:8080/clients")
+            .then(response => response.json())
+            .then(clients => {
+                clientsList = clients;
+                $('#clientSelect').empty();
+                $('#clientSelect').append(`<option value="" selected disabled>Select a Client</option>`);
+                clients.forEach(client => {
+                    $('#clientSelect').append(`
+                        <option value="${client.id}">${client.name}</option>
+                    `);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching clients:', error);
+                alert('Failed to fetch clients. Please try again later.');
+            });
+    }
+
+    // Cargar productos y clientes al cargar la página
     loadProducts();
+    loadClients();
 
     // Manejar el clic en el botón de envío de orden
     $('#submitOrderBtn').click(function () {
@@ -87,9 +109,12 @@ $(document).ready(function () {
             }
         });
 
+        const clientId = $('#clientSelect').val();
+
         const orderDTO = {
             items: orderItems,
-            total: total
+            total: total,
+            clientId: clientId
         };
 
         // Enviar la solicitud POST al servidor para guardar el pedido
@@ -117,8 +142,3 @@ $(document).ready(function () {
             });
     });
 });
-
-
-
-
-

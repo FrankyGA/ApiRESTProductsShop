@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,10 @@ public class Order {
 	@Column(name = "id_order")
 	@Schema(example = "1", description = "ID for order")
 	private Long id;
+	
+	@ManyToOne
+    @JoinColumn(name = "id_client", nullable = false)
+    private Client client;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items;
