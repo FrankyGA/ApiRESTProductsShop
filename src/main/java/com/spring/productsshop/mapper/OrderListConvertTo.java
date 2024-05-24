@@ -23,7 +23,7 @@ public class OrderListConvertTo {
     private static OrderListItemDTO convertToItemDTO(OrderItem orderItem) {
         OrderListItemDTO orderListItemDTO = new OrderListItemDTO();
         orderListItemDTO.setProductId(orderItem.getProduct().getId());
-        orderListItemDTO.setProductName(orderItem.getProduct().getName());
+        orderListItemDTO.setName(orderItem.getProduct().getName());
         orderListItemDTO.setBrand(orderItem.getProduct().getBrand());
         orderListItemDTO.setQuantity(orderItem.getQuantity());
         orderListItemDTO.setPrice(orderItem.getPrice());
