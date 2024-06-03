@@ -21,6 +21,7 @@ import com.spring.productsshop.dto.OrderListDTO;
 import com.spring.productsshop.exception.ErrorDetails;
 import com.spring.productsshop.exception.ResourceNotFoundException;
 import com.spring.productsshop.mapper.OrderConvertTo;
+import com.spring.productsshop.mapper.OrderListConvertTo;
 import com.spring.productsshop.model.Client;
 import com.spring.productsshop.model.Order;
 import com.spring.productsshop.model.OrderItem;
@@ -31,6 +32,7 @@ import com.spring.productsshop.repository.OrderRepository;
 import com.spring.productsshop.repository.ProductRepository;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -54,6 +56,23 @@ public class OrderController {
 		this.productRepository = productRepository;
 		this.clientRepository = clientRepository;
 	}
+	
+	// --------------------- Método para consultar todos los pedidos ---------------------//
+		@Operation(summary = "Get all orders", description = "Get a list of all orders") // Documentación de Swagger/OpenAPI
+		@ApiResponses(value = {
+				@ApiResponse(responseCode = "200", description = "Orders found, retrieved orders", content = {
+						@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = OrderDTO.class))) }),
+				@ApiResponse(responseCode = "404", description = "Orders not found", content = @Content(schema = @Schema(implementation = ErrorDetails.class))) })
+		@GetMapping("/orders/all") // Mapeo de la solicitud GET para obtener todos los pedidos
+		public ResponseEntity<List<OrderListDTO>> getAllOrders() {
+			List<Order> orders = orderRepository.findAll(); // Consulta para obtener todos los pedidos
+			if (orders.isEmpty()) { // Verifica si la lista de pedidos está vacía
+				throw new ResourceNotFoundException("No orders found"); // Lanza una excepción si no se encuentran pedidos
+			}
+			List<OrderListDTO> orderListDTOs = orders.stream().map(OrderListConvertTo::convertToDTO) // Convierte las entidades de pedidos a DTOs
+					.collect(Collectors.toList());
+			return ResponseEntity.ok(orderListDTOs); // Devuelve la lista de pedidos en el cuerpo de la respuesta
+		}
 
 	// --------------------- Método para consultar pedidos por cliente ---------------------//
 	@Operation(summary = "Get orders by client", description = "Get orders by client")
@@ -61,15 +80,15 @@ public class OrderController {
 			@ApiResponse(responseCode = "200", description = "Orders found, retrieved orders", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = OrderListDTO.class)) }),
 			@ApiResponse(responseCode = "404", description = "Orders not found", content = @Content(schema = @Schema(implementation = ErrorDetails.class))) })
-	@GetMapping("/orders")
-	public ResponseEntity<List<OrderDTO>> getOrdersByClient(@RequestParam Long clientId) {
+	@GetMapping("/ordersClient")
+	public ResponseEntity<List<OrderListDTO>> getOrdersByClient(@RequestParam Long clientId) {
 		List<Order> orders = orderRepository.findByClientId(clientId); // Consultar pedidos por ID de cliente
 		if (orders.isEmpty()) {
 			throw new ResourceNotFoundException("No orders found for client with ID: " + clientId); 
 		}
-		List<OrderDTO> orderDTOs = orders.stream().map(OrderConvertTo::convertToDTO) // Convertir entidades de pedido a DTO
+		List<OrderListDTO> orderListDTOs = orders.stream().map(OrderListConvertTo::convertToDTO) // Convertir entidades de pedido a DTO
 				.collect(Collectors.toList());
-		return ResponseEntity.ok(orderDTOs); // Devolver lista de pedidos
+		return ResponseEntity.ok(orderListDTOs); // Devolver lista de pedidos
 	}
 
 	// --------------------- Método para consultar pedido por ID ---------------------//

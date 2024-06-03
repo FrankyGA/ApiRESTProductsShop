@@ -15,6 +15,7 @@ public class OrderConvertTo {
     public static OrderDTO convertToDTO(Order order) {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(order.getId());
+        orderDTO.setClientId(order.getClient().getId());
         orderDTO.setTotal(order.getTotal());
         orderDTO.setItems(order.getItems().stream()
             .map(OrderConvertTo::convertToItemDTO)
