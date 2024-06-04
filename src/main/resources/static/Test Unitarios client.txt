@@ -1,0 +1,147 @@
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class ClientServiceTest {
+
+    @Mock
+    private ClientRepository clientRepository;
+
+    @InjectMocks
+    private ClientService clientService;
+
+    @Test
+    void testGetAllClients() {
+        // Configuración del mock
+        List<Client> clients = new ArrayList<>();
+        clients.add(new Client("John Doe", "Address 1", 25));
+        clients.add(new Client("Jane Doe", "Address 2", 30));
+        when(clientRepository.findAll()).thenReturn(clients);
+
+        // Ejecución del método
+        List<Client> result = clientService.getAllClients();
+
+        // Verificación del resultado
+        assertEquals(clients, result);
+    }
+}
+
+
+@Test
+void testGetClientById() {
+    // Configuración del mock
+    Client client = new Client("John Doe", "Address 1", 25);
+    when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
+
+    // Ejecución del método
+    Optional<Client> result = clientService.getClientById(1L);
+
+    // Verificación del resultado
+    assertEquals(Optional.of(client), result);
+}
+
+@Test
+void testGetClientById_NotFound() {
+    // Configuración del mock
+    when(clientRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // Ejecución del método
+    Optional<Client> result = clientService.getClientById(1L);
+
+    // Verificación del resultado
+    assertEquals(Optional.empty(), result);
+}
+
+
+@Test
+void testCreateClient() {
+    // Configuración del mock
+    Client client = new Client("John Doe", "Address 1", 25);
+    when(clientRepository.save(client)).thenReturn(client);
+
+    // Ejecución del método
+    Client result = clientService.createClient(client);
+
+    // Verificación del resultado
+    assertEquals(client, result);
+}
+
+
+@Test
+void testUpdateClient() {
+    // Configuración del mock
+    Client client = new Client("John Doe", "Address 1", 25);
+    Client updatedClient = new Client("Jane Doe", "Address 2", 30);
+    when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
+    when(clientRepository.save(client)).thenReturn(client);
+
+    // Ejecución del método
+    Client result = clientService.updateClient(1L, updatedClient);
+
+    // Verificación del resultado
+    assertEquals(client, result);
+}
+
+@Test
+void testUpdateClient_NotFound() {
+    // Configuración del mock
+    when(clientRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // Ejecución del método
+    try {
+        clientService.updateClient(1L, new Client("Jane Doe", "Address 2", 30));
+        fail("Should throw ResourceNotFoundException");
+    } catch (ResourceNotFoundException e) {
+        assertEquals("Client not found with id: 1", e.getMessage());
+    }
+}
+
+
+@Test
+void testUpdateClientName() {
+    // Configuración del mock
+    Client client = new Client("John Doe", "Address 1", 25);
+    when(clientRepository.findById(1L)).thenReturn(Optional.of(client));
+    when(clientRepository.save(client)).thenReturn(client);
+
+    // Ejecución del método
+    Client result = clientService.updateClientName(1L, "Jane Doe");
+
+    // Verificación del resultado
+    assertEquals("Jane Doe", result.getName());
+}
+
+@Test
+void testUpdateClientName_NotFound() {
+    // Configuración del mock
+    when(clientRepository.findById(1L)).thenReturn(Optional.empty());
+
+    // Ejecución del método
+    try {
+        clientService.updateClientName(1L, "Jane Doe");
+        fail("Should throw ResourceNotFoundException");
+    } catch (ResourceNotFoundException e) {
+        assertEquals("Client not found with id: 1", e.getMessage());
+    }
+}
+
+
+@Test
+void testDeleteClient() {
+    // Configuración del mock
+    when(clientRepository.existsById(1L)).thenReturn(true);
+
+    // Ejecución del método
+    clientService.deleteClient(1L);
+
+    // Verificación del resultado
+    verify(clientRepository, times(1)).
